@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Formats.Asn1;
 using System.Globalization;
 
@@ -17,6 +18,13 @@ namespace Solteq_assignment.Server.Controllers
         public string unit { get; set; }
     }
 
+    public class Item
+    {
+        public string month { get; set; }
+        public string location { get; set; }
+        public double value { get; set; }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class ConsumptionController : Controller
@@ -27,7 +35,7 @@ namespace Solteq_assignment.Server.Controllers
         [HttpGet]
         public string Get()
         {
-            // To get statistics from another service as well, we need another set of these, with possible changes to accommodate for how the data is stored there
+            // To get statistics from another service as well, we need another set of these, the parsing part can be similarly done depending on the format data is stored in the service
             // we also need to change the url of which the data is retrieved
             HttpClient client = new();
             var dataString = client.GetAsync(url).Result.Content.ReadAsStringAsync().Result;
@@ -41,8 +49,7 @@ namespace Solteq_assignment.Server.Controllers
                 csv.WriteRecords(objects);
             }
 
-            List<Dictionary<string, double>> list = new List<Dictionary<string, double>>();
-            Dictionary<string, double> dict = new Dictionary<string, double>();
+            List<Item> list = new List<Item>();
 
             // To get weekly data we can use the Calendar.GetWeekOfYear function to get the week number and then use the week number as
             // a key for the dictionary and otherwise have the same kind of code
@@ -52,99 +59,206 @@ namespace Solteq_assignment.Server.Controllers
                 switch (item.timestamp.Month)
                 {
                     case 1:
-                        if (!dict.ContainsKey("January"))
+                        if (list.Find(item => item.month == "January") == null)
                         {
-                            dict.Add("January", item.value);
+                            list.Add(new Item {
+                                month = "January",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["January"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "January");
+                            foundItem.value += item.value;
+                        }
                         break;
                     case 2:
-                        if (!dict.ContainsKey("February"))
+                        if (list.Find(item => item.month == "February") == null)
                         {
-                            dict.Add("February", item.value);
+                            list.Add(new Item
+                            {
+                                month = "February",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["February"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "February");
+                            foundItem.value += item.value;
+                        }
+
                         break;
                     case 3:
-                        if (!dict.ContainsKey("March"))
+                        if (list.Find(item => item.month == "March") == null)
                         {
-                            dict.Add("March", item.value);
+                            list.Add(new Item
+                            {
+                                month = "March",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["March"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "March");
+                            foundItem.value += item.value;
+                        }
+
                         break;
                     case 4:
-                        if (!dict.ContainsKey("April"))
+                        if (list.Find(item => item.month == "April") == null)
                         {
-                            dict.Add("April", item.value);
+                            list.Add(new Item
+                            {
+                                month = "April",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["April"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "April");
+                            foundItem.value += item.value;
+                        }
                         break;
                     case 5:
-                        if (!dict.ContainsKey("May"))
+                        if (list.Find(item => item.month == "May") == null)
                         {
-                            dict.Add("May", item.value);
+                            list.Add(new Item
+                            {
+                                month = "May",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["May"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "May");
+                            foundItem.value += item.value;
+                        }
                         break;
                     case 6:
-                        if (!dict.ContainsKey("June"))
+                        if (list.Find(item => item.month == "June") == null)
                         {
-                            dict.Add("June", item.value);
+                            list.Add(new Item
+                            {
+                                month = "June",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["June"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "June");
+                            foundItem.value += item.value;
+                        }
                         break;
                     case 7:
-                        if (!dict.ContainsKey("July"))
+                        if (list.Find(item => item.month == "July") == null)
                         {
-                            dict.Add("July", item.value);
+                            list.Add(new Item
+                            {
+                                month = "July",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["July"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "July");
+                            foundItem.value += item.value;
+                        }
                         break;
                     case 8:
-                        if (!dict.ContainsKey("August"))
+                        if (list.Find(item => item.month == "August") == null)
                         {
-                            dict.Add("August", item.value);
+                            list.Add(new Item
+                            {
+                                month = "August",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["August"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "August");
+                            foundItem.value += item.value;
+                        }
                         break;
                     case 9:
-                        if (!dict.ContainsKey("September"))
+                        if (list.Find(item => item.month == "September") == null)
                         {
-                            dict.Add("September", item.value);
+                            list.Add(new Item
+                            {
+                                month = "September",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["September"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "September");
+                            foundItem.value += item.value;
+                        }
                         break;
                     case 10:
-                        if (!dict.ContainsKey("October"))
+                        if (list.Find(item => item.month == "October") == null)
                         {
-                            dict.Add("October", item.value);
+                            list.Add(new Item
+                            {
+                                month = "October",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["October"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "October");
+                            foundItem.value += item.value;
+                        }
                         break;
                     case 11:
-                        if (!dict.ContainsKey("November"))
+                        if (list.Find(item => item.month == "November") == null)
                         {
-                            dict.Add("November", item.value);
+                            list.Add(new Item
+                            {
+                                month = "November",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["November"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "November");
+                            foundItem.value += item.value;
+                        }
                         break;
                     case 12:
-                        if (!dict.ContainsKey("December"))
+                        if (list.Find(item => item.month == "December") == null)
                         {
-                            dict.Add("December", item.value);
+                            list.Add(new Item
+                            {
+                                month = "December",
+                                location = item.locationName,
+                                value = item.value
+                            });
                         }
-                        else dict["December"] += item.value;
+                        else
+                        {
+                            Item foundItem = list.Find(item => item.month == "December");
+                            foundItem.value += item.value;
+                        }
                         break;
                     default:
                         break;
                 }
             }
 
-            list.Add(dict);
+            string jsonString = JsonConvert.SerializeObject(list);
 
-            string json = JsonConvert.SerializeObject(list);
-
-            return json;
+            return jsonString;
         }
     }
 }
