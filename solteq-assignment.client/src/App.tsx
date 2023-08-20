@@ -1,55 +1,39 @@
-import { useEffect, useState } from 'react';
+//import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 
-interface Forecast {
-    date: string;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string;
-}
+import { Box, Button } from "@mui/material";
+
+import EntryListPage from "./components/EntryListPage"
+
+import { Recording } from "./types"
+import { RootState, setEntries } from "./state";
 
 function App() {
-    const [forecasts, setForecasts] = useState<Forecast[]>();
+    const dispatch = useDispatch();
+    const entries = useSelector<RootState, Recording[]>((state) => state.entries)
 
-    useEffect(() => {
-        populateWeatherData();
-    }, []);
-
-    const contents = forecasts === undefined
-        ? <p><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationreact">https://aka.ms/jspsintegrationreact</a> for more details.</em></p>
-        : <table className="table table-striped" aria-labelledby="tabelLabel">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Temp. (C)</th>
-                    <th>Temp. (F)</th>
-                    <th>Summary</th>
-                </tr>
-            </thead>
-            <tbody>
-                {forecasts.map(forecast =>
-                    <tr key={forecast.date}>
-                        <td>{forecast.date}</td>
-                        <td>{forecast.temperatureC}</td>
-                        <td>{forecast.temperatureF}</td>
-                        <td>{forecast.summary}</td>
-                    </tr>
-                )}
-            </tbody>
-        </table>;
+    const retrieveData = async () => {
+        const response = await fetch("https://localhost:7183/api/Consumption")
+        const json = await response.json() as Recording[];
+        dispatch(setEntries({entries: json}))
+    }
 
     return (
         <div>
-            <h1 id="tabelLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+            <Box>
+                <Box>
+                    <Button variant="contained" onClick={() => retrieveData()}>Retrieve Monthly Data</Button>
+                </Box>
+                {entries.length > 0 ?
+                
+                    <Box>
+                <EntryListPage />
+                    </Box>
+                : <div></div>
+                }
+            </Box>
         </div>
     );
-
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        const data = await response.json();
-        setForecasts(data);
-    }
 }
 
 export default App;
