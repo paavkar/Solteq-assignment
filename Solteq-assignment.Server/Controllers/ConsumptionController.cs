@@ -1,30 +1,11 @@
 ﻿using CsvHelper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Formats.Asn1;
+using Solteq_assignment.Server.Models;
 using System.Globalization;
 
 namespace Solteq_assignment.Server.Controllers
 {
-
-    public class Recording
-    {
-        public DateTime timestamp { get; set; }
-        public string reportingGroup { get; set; }
-        public string locationName { get; set; }
-        public double value { get; set; }
-        public string unit { get; set; }
-    }
-
-    public class Item
-    {
-        public string month { get; set; }
-        public string location { get; set; }
-        public double value { get; set; }
-    }
-
     [Route("api/[controller]")]
     [ApiController]
     public class ConsumptionController : Controller
@@ -51,8 +32,8 @@ namespace Solteq_assignment.Server.Controllers
 
             List<Item> list = new List<Item>();
 
-            // To get weekly data we can use the Calendar.GetWeekOfYear function to get the week number and then use the week number as
-            // a key for the dictionary and otherwise have the same kind of code
+            // To get weekly data we can use the Calendar.GetWeekOfYear function to get the week number
+            // and then set the week number as currently the month is set
             // Console.WriteLine(calendar.GetWeekOfYear(item.timestamp, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
             foreach (var item in objects)
             {
